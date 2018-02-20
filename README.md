@@ -1,4 +1,4 @@
-# Twitter_Extraction_Analysis
+# Twitter Extraction and Analysis
 Twitter Extraction and Analysis Tools based on Tweepy
 
 Made for UniMe internship (code: T.E.A.)
