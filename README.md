@@ -15,10 +15,10 @@ The project is composed of three tools:
 
 **System Requirements**
 - Any Linux distro (works **only** on Linux, for now)
-- Python 3
+- Python 3 (works **only** on Python 3, no backports for now)
 - Tweepy module
 - Texblob module (and NLTK corpora, use: `python -m textblob.download_corpora`)
-- Ntlk module
+- Nltk module
 - Matplotlib module
 - Pandas module
 - Fuzzywuzzy module (used for text comparison)
