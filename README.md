@@ -18,7 +18,7 @@ The project is composed of three tools:
 - Python 3 (works **only** on Python 3, no backports for now)
 - Tweepy module
 - Texblob module (and NLTK corpora, use: `python -m textblob.download_corpora`)
-- Nltk module
+- Geocoder module
 - Matplotlib module
 - Pandas module
 - Fuzzywuzzy module (used for text comparison)
