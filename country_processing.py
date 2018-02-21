@@ -28,7 +28,11 @@ class CountryProcessor():
         self._status = ""
 
     def clean_name(self, tweet):
-        return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
+        return ' '.join(
+            re.sub(
+                "(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)",
+                " ",
+                tweet).split())
 
     def parse_countries(self, fname, fout):
         self._fname = fname
@@ -38,15 +42,19 @@ class CountryProcessor():
         self._cnt = 1
 
         if os.name == "nt":
-            with open(fname, 'r', encoding = 'utf-8') as self._myFile:
+            with open(fname, 'r', encoding='utf-8') as self._myFile:
                 self._reader = csv.reader(self._myFile, delimiter=',')
                 next(self._reader, None)
-                self._myList = list(self.clean_name(self._i[1]) for self._i in self._reader)
+                self._myList = list(
+                    self.clean_name(
+                        self._i[1]) for self._i in self._reader)
         else:
             with open(fname, 'r') as self._myFile:
                 self._reader = csv.reader(self._myFile, delimiter=',')
                 next(self._reader, None)
-                self._myList = list(self.clean_name(self._i[1]) for self._i in self._reader)
+                self._myList = list(
+                    self.clean_name(
+                        self._i[1]) for self._i in self._reader)
 
         try:
             print("[NOTICE] Using Komoot Geolocator Database")
@@ -62,13 +70,13 @@ class CountryProcessor():
 
             self._res = dict(Counter(self._data))
 
-            #Unix
+            # Unix
             if os.name != "nt":
                 with open(self._fout, 'w') as self._csv_file:
                     self._writer = csv.writer(self._csv_file)
                     for self._key, self._value in self._res.items():
                         self._writer.writerow([self._key, self._value])
-            #Windows
+            # Windows
             else:
                 with open(self._fout, 'w', newline='') as self._csv_file:
                     self._writer = csv.writer(self._csv_file)
@@ -79,7 +87,6 @@ class CountryProcessor():
             print("[NOTICE] Interrupted. (Ctrl+C)")
             self._res = dict(Counter(self.data))
 
-
     def plot_graph(self, fname, limit, num, bhash, gfile):
         self._base_hash = bhash
         self._data_file = fname
@@ -87,12 +94,13 @@ class CountryProcessor():
         self._num = str(num)
         self._gfile = gfile
 
-        self._title = "Countries Analysis for " + self._num + " tweets including '" + self._base_hash + "' "
+        self._title = "Countries Analysis for " + self._num + \
+            " tweets including '" + self._base_hash + "' "
         self._title += "hashtag \n(frequency over " + str(self._limit)
         self._title += ") "
 
-        self._outfile = open(self._data_file,"r")
-        self._rfile=csv.reader(self._outfile)
+        self._outfile = open(self._data_file, "r")
+        self._rfile = csv.reader(self._outfile)
 
         self._countries = []
         self._freq = []
@@ -106,17 +114,45 @@ class CountryProcessor():
                     pass
 
         plt.title(self._title)
-        plt.pie(self._freq, labels=self._countries, autopct='%1.0f%%', pctdistance=1.1, labeldistance=1.2)
+        plt.pie(
+            self._freq,
+            labels=self._countries,
+            autopct='%1.0f%%',
+            pctdistance=1.1,
+            labeldistance=1.2)
         plt.savefig(self._gfile)
         plt.show()
 
 
 def get_args():
-    _parser = argparse.ArgumentParser(description='Script plot countries pie graph from tweets dataset')
-    _parser.add_argument('-i', '--ifile', type=str, help='CSV input filename', required=True)
-    _parser.add_argument('-n', '--tnum', type=int, help='Number of tweets to get', required=True, default=500)
-    _parser.add_argument('-t', '--hashtag', type=str, help='Hashtag to search', required=True)
-    _parser.add_argument('-l', '--limitf', type=int, help='Limit hasht. frequency for plotter', required=False, default=50)
+    _parser = argparse.ArgumentParser(
+        description='Script plot countries pie graph from tweets dataset')
+    _parser.add_argument(
+        '-i',
+        '--ifile',
+        type=str,
+        help='CSV input filename',
+        required=True)
+    _parser.add_argument(
+        '-n',
+        '--tnum',
+        type=int,
+        help='Number of tweets to get',
+        required=True,
+        default=500)
+    _parser.add_argument(
+        '-t',
+        '--hashtag',
+        type=str,
+        help='Hashtag to search',
+        required=True)
+    _parser.add_argument(
+        '-l',
+        '--limitf',
+        type=int,
+        help='Limit hasht. frequency for plotter',
+        required=False,
+        default=50)
 
     _args = _parser.parse_args()
     _ifile = _args.ifile

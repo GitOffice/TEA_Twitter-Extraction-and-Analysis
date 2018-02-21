@@ -22,12 +22,41 @@ except ImportError:
 
 
 def get_args():
-    _parser = argparse.ArgumentParser(description='Script retrieves tweets with one/more hashtags')
-    _parser.add_argument('-a', '--auth', type=str, help='User auth. file', required=True)
-    _parser.add_argument('-o', '--ofile', type=str, help='CSV output filename', required=False, default="tweet_search.csv")
-    _parser.add_argument('-n', '--tnum', type=int, help='Number of tweets to get', required=True, default=500)
-    _parser.add_argument('-t', '--hashtag', type=str, help='Hashtag to search', required=True)
-    _parser.add_argument('-l', '--limitf', type=int, help='Limit hasht. frequency for plotter', required=False, default=50)
+    _parser = argparse.ArgumentParser(
+        description='Script retrieves tweets with one/more hashtags')
+    _parser.add_argument(
+        '-a',
+        '--auth',
+        type=str,
+        help='User auth. file',
+        required=True)
+    _parser.add_argument(
+        '-o',
+        '--ofile',
+        type=str,
+        help='CSV output filename',
+        required=False,
+        default="tweet_search.csv")
+    _parser.add_argument(
+        '-n',
+        '--tnum',
+        type=int,
+        help='Number of tweets to get',
+        required=True,
+        default=500)
+    _parser.add_argument(
+        '-t',
+        '--hashtag',
+        type=str,
+        help='Hashtag to search',
+        required=True)
+    _parser.add_argument(
+        '-l',
+        '--limitf',
+        type=int,
+        help='Limit hasht. frequency for plotter',
+        required=False,
+        default=50)
 
     _args = _parser.parse_args()
     _u_auth = _args.auth
@@ -44,7 +73,7 @@ if __name__ == "__main__":
     try:
 
         _u_auth, _outfile, _num, _hashtag, _limit = get_args()
-        _parsed_data = ((str(_outfile))[:-4])+"_sentiment.csv"
+        _parsed_data = ((str(_outfile))[:-4]) + "_sentiment.csv"
 
         print("[INFO] Twitter extraction tool\n")
 
@@ -56,15 +85,17 @@ if __name__ == "__main__":
 
         print("\n[ANALYSIS] 'Tweet sentiment' data processing")
 
-        _ptweets = [_tweet for _tweet in _tweets if _tweet['sentiment'] == 'positive']
-        _ntweets = [_tweet for _tweet in _tweets if _tweet['sentiment'] == 'negative']
+        _ptweets = [
+            _tweet for _tweet in _tweets if _tweet['sentiment'] == 'positive']
+        _ntweets = [
+            _tweet for _tweet in _tweets if _tweet['sentiment'] == 'negative']
         _neutral = len(_tweets) - len(_ntweets) - len(_ptweets)
 
-        print("[POSITIVE | NEGATIVE | NEUTRAL   ]")
-        print("[ {:.2f} %".format(100*len(_ptweets)/len(_tweets)),
-                        "|      {:.2f} %".format(100*len(_ntweets)/len(_tweets)),
-                        "|      {:.2f} %".format(100*_neutral/len(_tweets)),
-                        "]")
+        print("[POSITIVE | NEGATIVE | NEUTRAL  ]")
+        print("[ {:.2f} %".format(100 * len(_ptweets) / len(_tweets)),
+              "|  {:.2f} %".format(100 * len(_ntweets) / len(_tweets)),
+              "|  {:.2f} %".format(100 * _neutral / len(_tweets)),
+              "]")
 
         _elem = pp.PostProcessor()
 
@@ -106,7 +137,7 @@ if __name__ == "__main__":
         _nt_file = ((str(_outfile))[:-4]) + "_most_nt.csv"
 
         if os.name == 'nt':
-            #Windows
+            # Windows
             with open(_p_file, 'w', newline='') as _csv_file:
                 _writer = csv.writer(_csv_file)
                 for _key, _value in _final_pos.items():
@@ -126,7 +157,7 @@ if __name__ == "__main__":
                         _writer.writerow([_key, _value])
 
         else:
-            #Unix
+            # Unix
             with open(_p_file, 'w') as _csv_file:
                 _writer = csv.writer(_csv_file)
                 for _key, _value in _final_pos.items():

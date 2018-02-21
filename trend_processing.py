@@ -16,6 +16,7 @@ except ImportError:
     print("[ERROR] Unable to import Pandas module! Exit...")
     sys.exit()
 
+
 class Plotter(object):
 
     def __init__(self):
@@ -33,13 +34,16 @@ class Plotter(object):
         self._gfile = gfile
 
         try:
-            self._data = pd.read_csv(self._data_file, sep=',',header=None, index_col =0)
+            self._data = pd.read_csv(
+                self._data_file, sep=',', header=None, index_col=0)
             self._title = "Base hashtag: " + self._base_hash
-            self._title += "\nMost used '" +self._sentiment + "' #hashtags (written over " + self._limit
+            self._title += "\nMost used '" + self._sentiment + \
+                "' #hashtags (written over " + self._limit
             self._title += " times) in " + self._num + " tweets"
 
-            #Re-read the file
-            self._data = pd.read_csv(self._data_file, sep=',',header=None, index_col =0)
+            # Re-read the file
+            self._data = pd.read_csv(
+                self._data_file, sep=',', header=None, index_col=0)
 
             if self._sentiment == "positive":
                 self._color = "blue"
@@ -54,15 +58,39 @@ class Plotter(object):
             plt.title(self._title)
             plt.savefig(self._gfile)
 
-        except:
+        except BaseException:
             return
 
+
 def get_args():
-    _parser = argparse.ArgumentParser(description='Script plot histograms based on analyzed tweets')
-    _parser.add_argument('-i', '--ifile', type=str, help='CSV base name filename', required=False, default="tweet_search.csv")
-    _parser.add_argument('-n', '--tnum', type=int, help='Number of tweets analyzed', required=True)
-    _parser.add_argument('-t', '--hashtag', type=str, help='Base hashtag', required=True)
-    _parser.add_argument('-l', '--limitf', type=int, help='Limit hasht. frequency for plotter', required=False, default=50)
+    _parser = argparse.ArgumentParser(
+        description='Script plot histograms based on analyzed tweets')
+    _parser.add_argument(
+        '-i',
+        '--ifile',
+        type=str,
+        help='CSV base name filename',
+        required=False,
+        default="tweet_search.csv")
+    _parser.add_argument(
+        '-n',
+        '--tnum',
+        type=int,
+        help='Number of tweets analyzed',
+        required=True)
+    _parser.add_argument(
+        '-t',
+        '--hashtag',
+        type=str,
+        help='Base hashtag',
+        required=True)
+    _parser.add_argument(
+        '-l',
+        '--limitf',
+        type=int,
+        help='Limit hasht. frequency for plotter',
+        required=False,
+        default=50)
 
     _args = _parser.parse_args()
     _ifile = _args.ifile
@@ -95,9 +123,27 @@ if __name__ == "__main__":
         _g_n_file = ((str(_ifile))[:-4]) + "_neg_trend.png"
         _g_nt_file = ((str(_ifile))[:-4]) + "_nt_trend.png"
 
-        _pos_graph.plot_data(_p_file, "positive", str(_hashtag), str(_limit), str(_num), _g_p_file)
-        _neg_graph.plot_data(_n_file, "negative", str(_hashtag), str(_limit), str(_num), _g_n_file)
-        _nt_graph.plot_data(_nt_file, "neutral", str(_hashtag), str(_limit), str(_num), _g_nt_file)
+        _pos_graph.plot_data(
+            _p_file,
+            "positive",
+            str(_hashtag),
+            str(_limit),
+            str(_num),
+            _g_p_file)
+        _neg_graph.plot_data(
+            _n_file,
+            "negative",
+            str(_hashtag),
+            str(_limit),
+            str(_num),
+            _g_n_file)
+        _nt_graph.plot_data(
+            _nt_file,
+            "neutral",
+            str(_hashtag),
+            str(_limit),
+            str(_num),
+            _g_nt_file)
 
         _pos_graph.show_data()
         _neg_graph.show_data()

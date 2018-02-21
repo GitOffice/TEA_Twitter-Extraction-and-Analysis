@@ -23,10 +23,13 @@ class Authenticator():
             print("[*] Reading user credentials...")
             with open(self._auth_file, 'r') as self._auth:
                 self._config.read_file(self._auth)
-                self._consumer_key = self._config.get("ConsumerKey", "consumer_key")
-                self._consumer_secret = self._config.get("ConsumerSecret", "consumer_secret")
+                self._consumer_key = self._config.get(
+                    "ConsumerKey", "consumer_key")
+                self._consumer_secret = self._config.get(
+                    "ConsumerSecret", "consumer_secret")
                 self._access_key = self._config.get("AccessKey", "access_key")
-                self._access_secret = self._config.get("AccessSecret", "access_secret")
+                self._access_secret = self._config.get(
+                    "AccessSecret", "access_secret")
             print("[SUCCESS] Done.\n")
         except (IOError, OSError):
             print("[ERROR] Unable to find user data file (auth_user.ini)")
@@ -35,18 +38,19 @@ class Authenticator():
         print("[*] Trying access to Twitter...")
 
         try:
-            self._auth = tweepy.OAuthHandler(self._consumer_key, self._consumer_secret)
-        except:
+            self._auth = tweepy.OAuthHandler(
+                self._consumer_key, self._consumer_secret)
+        except BaseException:
             print("[ERROR] Unable to make OAuthHandler session!")
             sys.exit()
         try:
             self._auth.set_access_token(self._access_key, self._access_secret)
-        except:
+        except BaseException:
             print("[ERROR] Unable to set Access Token!")
             sys.exit()
         try:
             self._api = tweepy.API(self._auth)
-        except:
+        except BaseException:
             print("[ERROR] Unable to access Twitter profile!")
             sys.exit()
 
