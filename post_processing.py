@@ -1,10 +1,11 @@
 import csv
 import uuid
-import fuzzywuzzy #
-from fuzzywuzzy import fuzz #
-from fuzzywuzzy import process #
+import fuzzywuzzy
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 import collections
 import itertools
+
 
 class PostProcessor():
 
@@ -26,7 +27,8 @@ class PostProcessor():
                 if self._row[1] == self._sentiment:
                     self._text = self._row[0].replace("\\n", "")
                     self._text = (self._text).split(" ")
-                    self._extr = [self._word for self._word in self._text if self._word.startswith('#')]
+                    self._extr = [
+                        self._word for self._word in self._text if self._word.startswith('#')]
 
                     for self._part in self._extr:
                         if (fuzz.partial_ratio(self._mhash, self._part) > 80):
