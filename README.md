@@ -3,7 +3,7 @@ Twitter Extraction and Analysis Tools based on Tweepy
 
 Made for UniMe internship (code: T.E.A.)
 
-<b>Important</b>: before running any scripts, get your Twitter API keys and write them in the authorization file (for example: `*filename*.ini`).
+<b>Important</b>: before running any scripts, get your Twitter API keys and write them in the authorization file (for example: `auth_creds.ini`).
 
 The project is composed of three tools:
 
@@ -13,8 +13,9 @@ The project is composed of three tools:
 
 - <b>country_processing.py</b> read downloaded tweets and classifies them for "country" (parsing the tweet origin position on the Earth), then plot a pie chart based on ordered data. (run `./country_processing.py -h` to check arguments)
 
+_Works in Linux (any distro), Windows (7/8.1/10), macOS (from Sierra to higher)_
+
 **System Requirements**
-- Any Linux distro (works **only** on Linux, for now)
 - Python 3 (works **only** on Python 3, no backports for now)
 - Tweepy module
 - Texblob module (and NLTK corpora, use: `python -m textblob.download_corpora`)
