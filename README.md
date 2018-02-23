@@ -13,7 +13,7 @@ The project is composed of three tools:
 
 - <b>country_processing.py</b> read downloaded tweets and classifies them for "country" (parsing the tweet origin position on the Earth), then plot a pie chart based on ordered data. (run `./country_processing.py -h` to check arguments)
 
-_Works in Linux (any distro), Windows (7/8.1/10), macOS (from OS X Yosemite to higher)_
+_Works with Linux (any distro), Windows (7/8.1/10), macOS (from OS X Yosemite to higher)_
 
 **System Requirements**
 - Python 3 (works **only** on Python 3, no backports for now)
