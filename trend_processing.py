@@ -35,15 +35,19 @@ class Plotter(object):
 
         try:
             self._data = pd.read_csv(
-                self._data_file, sep=',', header=None, index_col=0)
+                self._data_file,
+                sep=',',
+                header=None,
+                usecols=[
+                    0,
+                    1])
+
+            self._data = self._data[self._data[1] > int(self._limit)]
+
             self._title = "Base hashtag: " + self._base_hash
             self._title += "\nMost used '" + self._sentiment + \
                 "' #hashtags (written over " + self._limit
             self._title += " times) in " + self._num + " tweets"
-
-            # Re-read the file
-            self._data = pd.read_csv(
-                self._data_file, sep=',', header=None, index_col=0)
 
             if self._sentiment == "positive":
                 self._color = "blue"
