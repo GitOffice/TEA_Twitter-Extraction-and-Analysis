@@ -9,6 +9,9 @@ from collections import Counter
 import argparse
 import os.path
 import os
+import warnings
+import matplotlib.cbook
+warnings.filterwarnings("ignore", category=matplotlib.cbook.mplDeprecation)
 
 try:
     import geocoder
@@ -85,7 +88,21 @@ class CountryProcessor():
 
         except KeyboardInterrupt:
             print("[NOTICE] Interrupted. (Ctrl+C)")
-            self._res = dict(Counter(self.data))
+
+            self._res = dict(Counter(self._data))
+
+            # Unix
+            if os.name != "nt":
+                with open(self._fout, 'w') as self._csv_file:
+                    self._writer = csv.writer(self._csv_file)
+                    for self._key, self._value in self._res.items():
+                        self._writer.writerow([self._key, self._value])
+            # Windows
+            else:
+                with open(self._fout, 'w', newline='') as self._csv_file:
+                    self._writer = csv.writer(self._csv_file)
+                    for self._key, self._value in self._res.items():
+                        self._writer.writerow([self._key, self._value])
 
     def plot_graph(self, fname, limit, num, bhash, gfile):
         self._base_hash = bhash
@@ -120,6 +137,7 @@ class CountryProcessor():
             autopct='%1.0f%%',
             pctdistance=1.1,
             labeldistance=1.2)
+        plt.axes().set_aspect('equal')
         plt.savefig(self._gfile)
         plt.show()
 
