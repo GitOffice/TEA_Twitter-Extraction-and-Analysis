@@ -13,12 +13,13 @@ The project is composed of three tools:
 
 - <b>country_processing.py</b> read downloaded tweets and classifies them for "country" (parsing the tweet origin position on the Earth), then plot a pie chart based on ordered data. (run `./country_processing.py -h` to check arguments)
 
-_Works in Linux (any distro), Windows (7/8.1/10), macOS (from Sierra to higher)_
+_Works in Linux (any distro), Windows (7/8.1/10), macOS (from OS X Yosemite to higher)_
 
 **System Requirements**
 - Python 3 (works **only** on Python 3, no backports for now)
 - Tweepy module
-- Texblob module (and NLTK corpora, use: `python -m textblob.download_corpora`)
+- Texblob module
+- NLTK corpora (use: `python -m textblob.download_corpora`)
 - Geocoder module
 - Matplotlib module
 - Pandas module
