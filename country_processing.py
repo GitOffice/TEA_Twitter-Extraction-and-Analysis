@@ -10,6 +10,7 @@ import argparse
 import os.path
 import os
 import warnings
+import common_utils as cu
 import matplotlib.cbook
 warnings.filterwarnings("ignore", category=matplotlib.cbook.mplDeprecation)
 
@@ -44,6 +45,8 @@ class CountryProcessor():
         self._cmap = {}
         self._cnt = 1
 
+        self._f_writer = cu.FastWriter()
+
         if os.name == "nt":
             with open(fname, 'r', encoding='utf-8') as self._myFile:
                 self._reader = csv.reader(self._myFile, delimiter=',')
@@ -73,36 +76,22 @@ class CountryProcessor():
 
             self._res = dict(Counter(self._data))
 
-            # Unix
-            if os.name != "nt":
-                with open(self._fout, 'w') as self._csv_file:
-                    self._writer = csv.writer(self._csv_file)
-                    for self._key, self._value in self._res.items():
-                        self._writer.writerow([self._key, self._value])
-            # Windows
-            else:
-                with open(self._fout, 'w', newline='') as self._csv_file:
-                    self._writer = csv.writer(self._csv_file)
-                    for self._key, self._value in self._res.items():
-                        self._writer.writerow([self._key, self._value])
+            self._f_writer.fast_writer(
+                self._fout,
+                self._res,
+                str(os.name)
+                )
 
         except KeyboardInterrupt:
             print("[NOTICE] Interrupted. (Ctrl+C)")
 
             self._res = dict(Counter(self._data))
 
-            # Unix
-            if os.name != "nt":
-                with open(self._fout, 'w') as self._csv_file:
-                    self._writer = csv.writer(self._csv_file)
-                    for self._key, self._value in self._res.items():
-                        self._writer.writerow([self._key, self._value])
-            # Windows
-            else:
-                with open(self._fout, 'w', newline='') as self._csv_file:
-                    self._writer = csv.writer(self._csv_file)
-                    for self._key, self._value in self._res.items():
-                        self._writer.writerow([self._key, self._value])
+            self._f_writer.fast_writer(
+                self._fout,
+                self._res,
+                str(os.name)
+                )
 
     def plot_graph(self, fname, limit, num, bhash, gfile):
         self._base_hash = bhash
