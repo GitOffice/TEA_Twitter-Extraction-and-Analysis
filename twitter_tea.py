@@ -4,6 +4,8 @@ import os
 import sys
 import argparse
 import csv
+import common_utils as cu
+
 try:
     import auth_check as ack
 except ImportError:
@@ -72,6 +74,8 @@ if __name__ == "__main__":
 
     try:
 
+        _f_writer = cu.FastWriter()
+
         _u_auth, _outfile, _num, _hashtag, _limit = get_args()
         _parsed_data = ((str(_outfile))[:-4]) + "_sentiment.csv"
 
@@ -135,46 +139,24 @@ if __name__ == "__main__":
         _p_file = ((str(_outfile))[:-4]) + "_most_pos.csv"
         _n_file = ((str(_outfile))[:-4]) + "_most_neg.csv"
         _nt_file = ((str(_outfile))[:-4]) + "_most_nt.csv"
+        
+        _f_writer.fast_writer(
+            _p_file,
+            _final_pos,
+            str(os.name)
+            )
 
-        if os.name == 'nt':
-            # Windows
-            with open(_p_file, 'w', newline='') as _csv_file:
-                _writer = csv.writer(_csv_file)
-                for _key, _value in _final_pos.items():
-                    if _final_pos[_key] > int(_limit):
-                        _writer.writerow([_key, _value])
+        _f_writer.fast_writer(
+            _n_file,
+            _final_neg,
+            str(os.name)
+            )
 
-            with open(_n_file, 'w', newline='') as _csv_file:
-                _writer = csv.writer(_csv_file)
-                for _key, _value in _final_neg.items():
-                    if _final_neg[_key] > int(_limit):
-                        _writer.writerow([_key, _value])
-
-            with open(_nt_file, 'w', newline='') as _csv_file:
-                _writer = csv.writer(_csv_file)
-                for _key, _value in _final_nt.items():
-                    if _final_nt[_key] > int(_limit):
-                        _writer.writerow([_key, _value])
-
-        else:
-            # Unix
-            with open(_p_file, 'w') as _csv_file:
-                _writer = csv.writer(_csv_file)
-                for _key, _value in _final_pos.items():
-                    if _final_pos[_key] > int(_limit):
-                        _writer.writerow([_key, _value])
-
-            with open(_n_file, 'w') as _csv_file:
-                _writer = csv.writer(_csv_file)
-                for _key, _value in _final_neg.items():
-                    if _final_neg[_key] > int(_limit):
-                        _writer.writerow([_key, _value])
-
-            with open(_nt_file, 'w') as _csv_file:
-                _writer = csv.writer(_csv_file)
-                for _key, _value in _final_nt.items():
-                    if _final_nt[_key] > int(_limit):
-                        _writer.writerow([_key, _value])
+        _f_writer.fast_writer(
+            _nt_file,
+            _final_nt,
+            str(os.name)
+            )
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")
