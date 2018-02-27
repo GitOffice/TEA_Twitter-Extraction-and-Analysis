@@ -52,22 +52,14 @@ def get_args():
         type=str,
         help='Hashtag to search',
         required=True)
-    _parser.add_argument(
-        '-l',
-        '--limitf',
-        type=int,
-        help='Limit hasht. frequency for plotter',
-        required=False,
-        default=50)
 
     _args = _parser.parse_args()
     _u_auth = _args.auth
     _outfile = _args.ofile
     _num = int(_args.tnum)
     _hashtag = _args.hashtag
-    _limit = int(_args.limitf)
 
-    return _u_auth, _outfile, _num, _hashtag, _limit
+    return _u_auth, _outfile, _num, _hashtag
 
 
 if __name__ == "__main__":
@@ -76,7 +68,7 @@ if __name__ == "__main__":
 
         _f_writer = cu.FastWriter()
 
-        _u_auth, _outfile, _num, _hashtag, _limit = get_args()
+        _u_auth, _outfile, _num, _hashtag = get_args()
         _parsed_data = ((str(_outfile))[:-4]) + "_sentiment.csv"
 
         print("[INFO] Twitter extraction tool\n")
