@@ -95,19 +95,19 @@ def get_args():
         required=False,
         default=50)
     _parser.add_argument(
-    '-g',
-    '--graph',
-    type=str,
-    help='Choose if open graph in window (y/n)',
-    required=False,
-    default="y")
+        '-g',
+        '--graph',
+        type=str,
+        help='Choose if open graph in window (y/n)',
+        required=False,
+        default="y")
 
     _args = _parser.parse_args()
     _ifile = _args.ifile
     _num = int(_args.tnum)
     _hashtag = _args.hashtag
     _limit = int(_args.limitf)
-    _sgraph = (_args.graph).lower() 
+    _sgraph = (_args.graph).lower()
 
     return _ifile, _num, _hashtag, _limit, _sgraph
 
@@ -159,7 +159,7 @@ if __name__ == "__main__":
         if _sgraph in ["y", "yes"]:
             _pos_graph.show_data()
             _neg_graph.show_data()
-            _nt_graph.show_data()            
+            _nt_graph.show_data()
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")

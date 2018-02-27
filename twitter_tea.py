@@ -131,24 +131,24 @@ if __name__ == "__main__":
         _p_file = ((str(_outfile))[:-4]) + "_most_pos.csv"
         _n_file = ((str(_outfile))[:-4]) + "_most_neg.csv"
         _nt_file = ((str(_outfile))[:-4]) + "_most_nt.csv"
-        
+
         _f_writer.fast_writer(
             _p_file,
             _final_pos,
             str(os.name)
-            )
+        )
 
         _f_writer.fast_writer(
             _n_file,
             _final_neg,
             str(os.name)
-            )
+        )
 
         _f_writer.fast_writer(
             _nt_file,
             _final_nt,
             str(os.name)
-            )
+        )
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")

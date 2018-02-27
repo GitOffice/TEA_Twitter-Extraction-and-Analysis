@@ -75,7 +75,7 @@ class CountryPlotter():
             labeldistance=1.2)
         plt.axes().set_aspect('equal')
         plt.savefig(self._gfile)
-        
+
         if sgraph in ["y", "yes"]:
             plt.show()
 
@@ -110,12 +110,12 @@ def get_args():
         required=False,
         default=50)
     _parser.add_argument(
-    '-g',
-    '--graph',
-    type=str,
-    help='Choose if open graph in window (y/n)',
-    required=False,
-    default="y")
+        '-g',
+        '--graph',
+        type=str,
+        help='Choose if open graph in window (y/n)',
+        required=False,
+        default="y")
 
     _args = _parser.parse_args()
     _ifile = _args.ifile
@@ -159,7 +159,7 @@ if __name__ == "__main__":
 
         _t_data = _t_datac.parse_countries(_ifile)
         _pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
-        
+
         try:
             _addresses = _pool.map(cp.geocoder_worker, _t_data)
             _pool.close()
@@ -170,9 +170,15 @@ if __name__ == "__main__":
                 _outfile,
                 _res,
                 str(os.name)
-                )
+            )
 
-            _plotter.plot_graph(_outfile, _limit, _num, _hashtag, _gfile, _sgraph)
+            _plotter.plot_graph(
+                _outfile,
+                _limit,
+                _num,
+                _hashtag,
+                _gfile,
+                _sgraph)
 
         except KeyboardInterrupt:
             _pool.terminate()
