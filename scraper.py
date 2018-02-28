@@ -56,7 +56,7 @@ class Scraper():
             sys.exit()
 
         print("[*] Fetching tweets and processing 'tweets sentiment' data")
-        print("[*] Please, wait...\n")
+        print("[*] Please, wait... (it can takes minutes)\n")
 
         try:
 

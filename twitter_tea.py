@@ -4,7 +4,6 @@ import os
 import sys
 import argparse
 import csv
-import common_utils as cu
 
 try:
     import auth_check as ack
@@ -20,6 +19,11 @@ try:
     import post_processing as pp
 except ImportError:
     print("[ERROR] Unable to import Post processing module: can't run!")
+    sys.exit()
+try:
+    import common_utils as cu
+except ImportError:
+    print("[ERROR] Unable to import Common Utils module: can't run!")
     sys.exit()
 
 
