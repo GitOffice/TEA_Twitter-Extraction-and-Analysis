@@ -83,71 +83,74 @@ if __name__ == "__main__":
         _tweets = scr.Scraper()
         _tweets = _tweets.get_tweets(_auth, _outfile, _num, _hashtag)
 
-        print("\n[ANALYSIS] 'Tweet sentiment' data processing")
-
         _ptweets = [
             _tweet for _tweet in _tweets if _tweet['sentiment'] == 'positive']
         _ntweets = [
             _tweet for _tweet in _tweets if _tweet['sentiment'] == 'negative']
         _neutral = len(_tweets) - len(_ntweets) - len(_ptweets)
+        
+        try:
+            print("\n[ANALYSIS] 'Tweet sentiment' data processing")
+            print("[POSITIVE | NEGATIVE | NEUTRAL  ]")
+            print("[ {:.2f} %".format(100 * len(_ptweets) / len(_tweets)),
+                  "|  {:.2f} %".format(100 * len(_ntweets) / len(_tweets)),
+                  "|  {:.2f} %".format(100 * _neutral / len(_tweets)),
+                  "]")
 
-        print("[POSITIVE | NEGATIVE | NEUTRAL  ]")
-        print("[ {:.2f} %".format(100 * len(_ptweets) / len(_tweets)),
-              "|  {:.2f} %".format(100 * len(_ntweets) / len(_tweets)),
-              "|  {:.2f} %".format(100 * _neutral / len(_tweets)),
-              "]")
+            _elem = pp.PostProcessor()
 
-        _elem = pp.PostProcessor()
+            _pos_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "positive")
+            _neg_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "negative")
+            _nt_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "neutral")
 
-        _pos_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "positive")
-        _neg_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "negative")
-        _nt_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "neutral")
+            _pos_list = []
+            _neg_list = []
+            _nt_list = []
 
-        _pos_list = []
-        _neg_list = []
-        _nt_list = []
+            [_pos_list.append(_pos_map[_key]) for _key in _pos_map]
+            [_neg_list.append(_neg_map[_key]) for _key in _neg_map]
+            [_nt_list.append(_nt_map[_key]) for _key in _nt_map]
 
-        [_pos_list.append(_pos_map[_key]) for _key in _pos_map]
-        [_neg_list.append(_neg_map[_key]) for _key in _neg_map]
-        [_nt_list.append(_nt_map[_key]) for _key in _nt_map]
+            _final_pos = dict()
+            _final_neg = dict()
+            _final_nt = dict()
 
-        _final_pos = dict()
-        _final_neg = dict()
-        _final_nt = dict()
+            for _z in _pos_list:
+                for _e in _z:
+                    _final_pos[_e] = int(_final_pos.get(_e, 0) + 1)
 
-        for _z in _pos_list:
-            for _e in _z:
-                _final_pos[_e] = int(_final_pos.get(_e, 0) + 1)
+            for _x in _neg_list:
+                for _y in _x:
+                    _final_neg[_y] = int(_final_neg.get(_y, 0) + 1)
 
-        for _x in _neg_list:
-            for _y in _x:
-                _final_neg[_y] = int(_final_neg.get(_y, 0) + 1)
+            for _w in _nt_list:
+                for _t in _w:
+                    _final_nt[_t] = int(_final_nt.get(_t, 0) + 1)
 
-        for _w in _nt_list:
-            for _t in _w:
-                _final_nt[_t] = int(_final_nt.get(_t, 0) + 1)
+            _p_file = ((str(_outfile))[:-4]) + "_most_pos.csv"
+            _n_file = ((str(_outfile))[:-4]) + "_most_neg.csv"
+            _nt_file = ((str(_outfile))[:-4]) + "_most_nt.csv"
 
-        _p_file = ((str(_outfile))[:-4]) + "_most_pos.csv"
-        _n_file = ((str(_outfile))[:-4]) + "_most_neg.csv"
-        _nt_file = ((str(_outfile))[:-4]) + "_most_nt.csv"
+            _f_writer.fast_writer(
+                _p_file,
+                _final_pos,
+                str(os.name)
+            )
 
-        _f_writer.fast_writer(
-            _p_file,
-            _final_pos,
-            str(os.name)
-        )
+            _f_writer.fast_writer(
+                _n_file,
+                _final_neg,
+                str(os.name)
+            )
 
-        _f_writer.fast_writer(
-            _n_file,
-            _final_neg,
-            str(os.name)
-        )
-
-        _f_writer.fast_writer(
-            _nt_file,
-            _final_nt,
-            str(os.name)
-        )
+            _f_writer.fast_writer(
+                _nt_file,
+                _final_nt,
+                str(os.name)
+            )
+        except ZeroDivisionError:
+            print("[ERROR] Zero Results for requested search! Exit...")
+            sys.exit()
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")

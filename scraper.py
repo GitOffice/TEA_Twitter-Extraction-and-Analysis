@@ -107,12 +107,6 @@ class Scraper():
                         "[ERROR] Unable to write analysis on file: ",
                         self._parsed_data)
                     sys.exit()
-
-            print("[SUCCESS] Tweets written on file: ", self._data)
-            print(
-                "[SUCCESS] Tweets sentiment analysis written on: ",
-                self._parsed_data)
-
             return self._tweets
 
         except tweepy.TweepError as e:
