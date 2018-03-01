@@ -107,14 +107,9 @@ if __name__ == "__main__":
         _neg_list = []
         _nt_list = []
 
-        for _key in _pos_map:
-            _pos_list.append(_pos_map[_key])
-
-        for _key in _neg_map:
-            _neg_list.append(_neg_map[_key])
-
-        for _key in _nt_map:
-            _nt_list.append(_nt_map[_key])
+        [_pos_list.append(_pos_map[_key]) for _key in _pos_map]
+        [_neg_list.append(_neg_map[_key]) for _key in _neg_map]
+        [_nt_list.append(_nt_map[_key]) for _key in _nt_map]
 
         _final_pos = dict()
         _final_neg = dict()
