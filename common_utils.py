@@ -1,4 +1,5 @@
 import csv
+import os
 import sys
 
 
@@ -25,6 +26,29 @@ class FastWriter():
                     self._writer = csv.writer(self._csv_file)
                     for self._key, self._value in self._res.items():
                         self._writer.writerow([self._key, self._value])
+
+        except BaseException:
+            print("[ERROR] Unable to write file on disk. Exit...")
+            sys.exit()
+
+
+    def backup_db(self, elem, fout):
+        self._fout = fout
+        self._mylist = elem
+        self._mylist = self._mylist.split(",")
+        try:
+            if os.name == "nt":
+                with open(self._fout, 'a', newline='') as self._db_file:
+                    self._writer = csv.writer(
+                        self._db_file 
+                        )
+                    self._writer.writerow(self._mylist)
+            else:
+                with open(self._fout, 'a') as self._db_file:
+                    self._writer = csv.writer(
+                        self._db_file 
+                        )
+                    self._writer.writerow(self._mylist)
 
         except BaseException:
             print("[ERROR] Unable to write file on disk. Exit...")

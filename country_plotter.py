@@ -151,7 +151,13 @@ if __name__ == "__main__":
         _f_path = _outfile
 
     if os.path.exists(_f_path) is True:
-        _plotter.plot_graph(_outfile, _limit, _num, _hashtag, _gfile, _sgraph)
+        _plotter.plot_graph(
+            _outfile, 
+            _limit, 
+            _num, 
+            _hashtag, 
+            _gfile, 
+            _sgraph)
     else:
         print("[NOTICE] Parsing countries data...")
         print("[*] Please, wait...")
