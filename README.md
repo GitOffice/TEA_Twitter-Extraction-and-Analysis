@@ -12,6 +12,8 @@ The project is composed of three tools:
 - <b>trend_plotter.py</b> read downloaded tweets and then plot three histograms based on classified data, one for each "sentiment". (run `./trend_processing.py -h` to check arguments)
 
 - <b>country_plotter.py</b> read downloaded tweets and divide them for "country" (parsing the tweet origin position on the Earth), then plot a pie chart based on ordered data. (run `./country_processing.py -h` to check arguments)
+**Important**: It uses a caching system! 
+**Performance of country_plotter improves every time the script itself is launched**
 
 _Works with Linux (any distro), Windows (7/8.1/10), macOS (from OS X Yosemite to higher)_
 
