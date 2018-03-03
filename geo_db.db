@@ -1,0 +1,2 @@
+#Geo database serves as permanent cache for reducing geoparsing time greatly.
+#The more country_plotter is launched, the better script performance are.
