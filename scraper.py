@@ -25,28 +25,23 @@ except ImportError:
 class Scraper():
 
     def __init__(self):
-        self._api = ""
+        self._status = ""
 
     def get_tweets(self, api, data, num, targets):
-        self._api = api
-        self._data = data
-        self._num = int(num)
-        self._targets = targets
-        self._tweets = []
-
+        self._tweets = list()
         self._analyzer = sc.TweetSentiment()
 
         try:
             if os.name == "nt":
                 self._csv_tweet = open(
-                    self._data, 'w', encoding='utf-8', newline='')
+                    data, 'w', encoding='utf-8', newline='')
             else:
-                self._csv_tweet = open(self._data, 'w')
+                self._csv_tweet = open(data, 'w')
             self._csv_tweet_writer = csv.writer(self._csv_tweet)
             self._csv_tweet_writer.writerow(
                 ["created_at", "location", "user", "full_text"])
 
-            self._parsed_data = ((str(self._data))[:-4]) + "_sentiment.csv"
+            self._parsed_data = ((str(data))[:-4]) + "_sentiment.csv"
             self._csv_data = open(self._parsed_data, 'w')
             self._csv_data_writer = csv.writer(self._csv_data)
             self._csv_data_writer.writerow(["tweet", "sentiment"])
@@ -61,12 +56,12 @@ class Scraper():
         try:
 
             for self._tweet in tweepy.Cursor(
-                    self._api.search,
-                    q=self._targets,
-                    count=self._num,
+                    api.search,
+                    q=targets,
+                    count=int(num),
                     lang="en",
                     tweet_mode="extended").items(
-                    self._num):
+                    int(num)):
 
                 try:
                     self._csv_tweet_writer.writerow([
@@ -78,11 +73,11 @@ class Scraper():
                 except BaseException:
                     print(
                         "[ERROR] Unable to write tweets on file: ",
-                        self._data)
+                        data)
                     sys.exit()
 
                 try:
-                    self._parsed_tweet = {}
+                    self._parsed_tweet = dict()
                     self._parsed_tweet['user'] = self._tweet.user.screen_name.encode(
                         'utf-8')
                     self._parsed_tweet['text'] = self._tweet.full_text.encode(

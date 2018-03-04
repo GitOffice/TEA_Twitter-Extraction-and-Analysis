@@ -28,125 +28,125 @@ except ImportError:
 
 
 def get_args():
-    _parser = argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description='Script retrieves tweets with one/more hashtags')
-    _parser.add_argument(
+    parser.add_argument(
         '-a',
         '--auth',
         type=str,
         help='User auth. file',
         required=True)
-    _parser.add_argument(
+    parser.add_argument(
         '-o',
         '--ofile',
         type=str,
         help='CSV output filename',
         required=False,
         default="tweet_search.csv")
-    _parser.add_argument(
+    parser.add_argument(
         '-n',
         '--tnum',
         type=int,
         help='Number of tweets to get',
         required=True,
         default=500)
-    _parser.add_argument(
+    parser.add_argument(
         '-t',
         '--hashtag',
         type=str,
         help='Hashtag to search',
         required=True)
 
-    _args = _parser.parse_args()
-    _u_auth = _args.auth
-    _outfile = _args.ofile
-    _num = int(_args.tnum)
-    _hashtag = _args.hashtag
+    args = parser.parse_args()
+    uauth = args.auth
+    outfile = args.ofile
+    num = int(args.tnum)
+    hashtag = args.hashtag
 
-    return _u_auth, _outfile, _num, _hashtag
+    return uauth, outfile, num, hashtag
 
 
 if __name__ == "__main__":
 
     try:
 
-        _f_writer = cu.FastWriter()
+        fwriter = cu.FastWriter()
 
-        _u_auth, _outfile, _num, _hashtag = get_args()
-        _parsed_data = ((str(_outfile))[:-4]) + "_sentiment.csv"
+        uauth, outfile, num, hashtag = get_args()
+        parsed_data = ((str(outfile))[:-4]) + "_sentiment.csv"
 
         print("[INFO] Twitter extraction tool\n")
 
-        _auth = ack.Authenticator()
-        _auth = _auth.auth_setup(_u_auth)
+        auth = ack.Authenticator()
+        auth = auth.auth_setup(uauth)
 
-        _tweets = scr.Scraper()
-        _tweets = _tweets.get_tweets(_auth, _outfile, _num, _hashtag)
+        tweets = scr.Scraper()
+        tweets = tweets.get_tweets(auth, outfile, num, hashtag)
 
-        _ptweets = [
-            _tweet for _tweet in _tweets if _tweet['sentiment'] == 'positive']
-        _ntweets = [
-            _tweet for _tweet in _tweets if _tweet['sentiment'] == 'negative']
-        _neutral = len(_tweets) - len(_ntweets) - len(_ptweets)
-        
+        ptweets = [
+            tweet for tweet in tweets if tweet['sentiment'] == 'positive']
+        ntweets = [
+            tweet for tweet in tweets if tweet['sentiment'] == 'negative']
+        neutral = len(tweets) - len(ntweets) - len(ptweets)
+
         try:
             print("\n[ANALYSIS] 'Tweet sentiment' data processing")
             print("[POSITIVE | NEGATIVE | NEUTRAL  ]")
-            print("[ {:.2f} %".format(100 * len(_ptweets) / len(_tweets)),
-                  "|  {:.2f} %".format(100 * len(_ntweets) / len(_tweets)),
-                  "|  {:.2f} %".format(100 * _neutral / len(_tweets)),
+            print("[ {:.2f} %".format(100 * len(ptweets) / len(tweets)),
+                  "|  {:.2f} %".format(100 * len(ntweets) / len(tweets)),
+                  "|  {:.2f} %".format(100 * neutral / len(tweets)),
                   "]")
 
-            _elem = pp.PostProcessor()
+            elem = pp.PostProcessor()
 
-            _pos_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "positive")
-            _neg_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "negative")
-            _nt_map = _elem.evaluate_text(_parsed_data, str(_hashtag), "neutral")
+            pos_map = elem.evaluate_text(
+                parsed_data, str(hashtag), "positive")
+            neg_map = elem.evaluate_text(
+                parsed_data, str(hashtag), "negative")
+            nt_map = elem.evaluate_text(
+                parsed_data, str(hashtag), "neutral")
 
-            _pos_list = []
-            _neg_list = []
-            _nt_list = []
+            pos_list = list()
+            neg_list = list()
+            nt_list = list()
 
-            [_pos_list.append(_pos_map[_key]) for _key in _pos_map]
-            [_neg_list.append(_neg_map[_key]) for _key in _neg_map]
-            [_nt_list.append(_nt_map[_key]) for _key in _nt_map]
+            [pos_list.append(pos_map[key]) for key in pos_map]
+            [neg_list.append(neg_map[key]) for key in neg_map]
+            [nt_list.append(nt_map[key]) for key in nt_map]
 
-            _final_pos = dict()
-            _final_neg = dict()
-            _final_nt = dict()
+            final_pos = dict()
+            final_neg = dict()
+            final_nt = dict()
 
-            for _z in _pos_list:
-                for _e in _z:
-                    _final_pos[_e] = int(_final_pos.get(_e, 0) + 1)
+            for _z in pos_list:
+                for e in _z:
+                    final_pos[e] = int(final_pos.get(e, 0) + 1)
 
-            for _x in _neg_list:
-                for _y in _x:
-                    _final_neg[_y] = int(_final_neg.get(_y, 0) + 1)
+            for x in neg_list:
+                for y in x:
+                    final_neg[y] = int(final_neg.get(y, 0) + 1)
 
-            for _w in _nt_list:
-                for _t in _w:
-                    _final_nt[_t] = int(_final_nt.get(_t, 0) + 1)
+            for w in nt_list:
+                for t in w:
+                    final_nt[t] = int(final_nt.get(t, 0) + 1)
 
-            _p_file = ((str(_outfile))[:-4]) + "_most_pos.csv"
-            _n_file = ((str(_outfile))[:-4]) + "_most_neg.csv"
-            _nt_file = ((str(_outfile))[:-4]) + "_most_nt.csv"
+            p_file = ((str(outfile))[:-4]) + "_most_pos.csv"
+            n_file = ((str(outfile))[:-4]) + "_most_neg.csv"
+            nt_file = ((str(outfile))[:-4]) + "_most_nt.csv"
 
-            _f_writer.fast_writer(
-                _p_file,
-                _final_pos,
-                str(os.name)
+            fwriter.fast_writer(
+                p_file,
+                final_pos
             )
 
-            _f_writer.fast_writer(
-                _n_file,
-                _final_neg,
-                str(os.name)
+            fwriter.fast_writer(
+                n_file,
+                final_neg
             )
 
-            _f_writer.fast_writer(
-                _nt_file,
-                _final_nt,
-                str(os.name)
+            fwriter.fast_writer(
+                nt_file,
+                final_nt
             )
         except ZeroDivisionError:
             print("[ERROR] Zero Results for requested search! Exit...")

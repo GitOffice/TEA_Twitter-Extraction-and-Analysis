@@ -1,6 +1,5 @@
 import multiprocessing
 import csv
-import common_utils as cu
 import os
 import re
 from collections import Counter
@@ -10,6 +9,11 @@ try:
     import geocoder
 except ImportError:
     print("[ERROR] Unable to import Geocoder module: cant'run! Exit...")
+    sys.exit()
+try:
+    import common_utils as cu
+except ImportError:
+    print("[ERROR] Unable to import 'common_utils' module! Exit...")
     sys.exit()
 
 
@@ -44,43 +48,48 @@ class CountryProcessor():
         return self._myList
 
 
-_db = cu.FastWriter()
+db = cu.FastWriter()
 
 if os.path.exists("./geo_db.db") is True:
-    _status = True
-    _df = pd.read_csv("geo_db.db", names=["loc", "country"], comment='#')
+    status = True
+    df = pd.read_csv("geo_db.db", names=["loc", "country"], comment='#')
+else:
+    status = False
 
 
 def geocoder_worker(location):
     try:
-        if _status is True:
-            _res = _df[_df["loc"].str.match(location)]['country']
-            
-            if len(_res) != 0:
-                print("[Cached]: ", _res.iloc[0])
-                return str(_res.iloc[0])
+        #if cache exists
+        if status is True:
+            res = df[df["loc"].str.match(location)]['country']
+
+            if len(res) != 0:
+                print("[Cached]", res.iloc[0])
+                return str(res.iloc[0])
             else:
-                _country_elem = geocoder.komoot(location)
-                _country_name = _country_elem.country
-            
-            if _country_name is None:
+                country_elem = geocoder.komoot(location)
+                country_name = country_elem.country
+
+            if country_name is None:
                 return
             else:
-                print(_country_name)
-                _temp = location + "," + _country_name
-                _db.backup_db(_temp, "geo_db.db")
-                return _country_name
-        else:
-            _country_elem = geocoder.komoot(location)
-            _country_name = _country_elem.country
+                print(country_name)
+                temp = location + "," + country_name
+                db.backup_db(temp, "geo_db.db")
+                return country_name
         
-        if _country_name is None:
+        #if cache doesn't exists
+        else:
+            country_elem = geocoder.komoot(location)
+            country_name = country_elem.country
+
+        if country_name is None:
             return
         else:
-            print(_country_name)
-            _temp = location + "," + _country_name
-            _db.backup_db(_temp, "geo_db.db")
-            return _country_name
-    
+            print(country_name)
+            temp = location + "," + country_name
+            db.backup_db(temp, "geo_db.db")
+            return country_name
+
     except KeyboardInterrupt:
         return

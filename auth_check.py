@@ -12,16 +12,12 @@ except ImportError:
 class Authenticator():
 
     def __init__(self):
-
         self._config = configparser.ConfigParser()
-        self._api = ""
 
     def auth_setup(self, auth_file):
-        self._auth_file = auth_file
-
         try:
             print("[*] Reading user credentials...")
-            with open(self._auth_file, 'r') as self._auth:
+            with open(auth_file, 'r') as self._auth:
                 self._config.read_file(self._auth)
                 self._consumer_key = self._config.get(
                     "ConsumerKey", "consumer_key")
