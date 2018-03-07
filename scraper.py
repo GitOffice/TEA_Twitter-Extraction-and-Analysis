@@ -105,7 +105,10 @@ class Scraper():
             return self._tweets
 
         except tweepy.TweepError as e:
-            print("[ERROR: TWEEPY API] " + str(e))
+            if e.api_code == 429:
+                print("[ERROR: TWEEPY API] Too many requests. Wait some minutes.")
+            else:
+                print("[ERROR: TWEEPY API] " + str(e.text))
             sys.exit()
         except BaseException:
             print("[ERROR] Unable to get/save tweets!")
