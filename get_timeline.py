@@ -40,27 +40,20 @@ def get_args():
         help='CSV output filename',
         required=False,
         default="user_timeline.csv")
-    parser.add_argument(
-        '-k',
-        '--keywords',
-        type=str,
-        help='Keywords to search (each word separed by comma)',
-        required=True)
 
     args = parser.parse_args()
     uauth = args.auth
     cuser = args.user
     outfile = args.ofile
-    ckeywords = args.keywords
 
-    return uauth, cuser, outfile, ckeywords
+    return uauth, cuser, outfile
 
 
 if __name__ == "__main__":
 
     try:
 
-        uauth, cuser, outfile, ckeywords = get_args()
+        uauth, cuser, outfile = get_args()
 
         auth = auth_check.Authenticator()
         auth = auth.auth_setup(uauth)
@@ -68,7 +61,7 @@ if __name__ == "__main__":
         analyzer = text_sentiment.TweetSentiment()
 
         sc = timeline_scraper.TimelineScraper()
-        sc.get_timeline(auth, analyzer, cuser, outfile, ckeywords)
+        sc.get_timeline(auth, analyzer, cuser, outfile)
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")
