@@ -16,5 +16,4 @@ _Works with Linux (any distro), Windows (7/8.1/10), macOS (from OS X Yosemite to
 - Matplotlib module
 - Pandas module
 - Fuzzywuzzy module (used for text comparison)
-- Pandas module
 - Numpy module
