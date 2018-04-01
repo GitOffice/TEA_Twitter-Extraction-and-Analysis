@@ -21,12 +21,16 @@ class PolarityPlotter():
     def __init__(self):
         self._status = ""
 
+    def save_data(self, gfile):
+        plt.savefig(gfile, dpi=200)
+
     def show_data(self):
         plt.show()
 
     def plot_data(self, fname, account, keywords, gfile, start, end):
         self._x = list()
         self._y = list()
+        self._err = list()
         
         self._title = str(account) + " polarity graph regarding: "
         self._title += str(keywords)
@@ -39,24 +43,37 @@ class PolarityPlotter():
         try:
             with open(fname, 'r') as self._csvfile:
                 self._plots = csv.reader(self._csvfile, delimiter=',')
-                next(self._plots, None)
+                #next(self._plots, None)
                 
                 for self._row in self._plots:
                     self._curr_date = datetime.strptime((self._row[0])[0:10], 
                         "%Y-%m-%d").date() 
                     self._curr_pol = float(self._row[1])
+                    self._curr_err = float(self._row[2])
 
                     if self._curr_date >= self._start and self._curr_date <= self._end:
-                            self._x.append((self._curr_date))
+                            self._x.append(self._curr_date)
                             self._y.append(self._curr_pol)
-            
+                            self._err.append(self._curr_err)
+            '''
             plt.plot(self._x, self._y)
+            #plt.errorbar(self._x, self._y, yerr=self._err)
             plt.axhline(0, color='grey', lw=1, linestyle="dashed")
             plt.set_xlim(xmin=self._start, xmax=self._end)
             plt.xlabel('x')
             plt.xticks(rotation=90)
             plt.ylabel('y')
+            '''
+            #plt.errorbar(self._x, self._y, self._err, marker='s', mfc='red', mec='red', ms=10, mew=4)
+            plt.xlabel('Timeline')
+            plt.xticks(rotation=45)
+            plt.ylabel('Polarity ("sentiment")')
+            plt.errorbar(self._x, self._y, self._err, 
+                capsize=4, elinewidth=0.5, ecolor="red", 
+                marker='.', mfc='red', ms=5)
+            plt.axhline(0, color='grey', lw=0.5, linestyle="dashed")
             plt.savefig(gfile, dpi=200)
+            #plt.save_data(gfile)
         
         except Exception:
             return
@@ -140,6 +157,8 @@ if __name__ == "__main__":
 
         if sgraph in ["y", "yes"]:
             pol_graph.show_data()
+
+        pol_graph.save_data(pol_file)
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")
