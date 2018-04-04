@@ -55,25 +55,21 @@ class PolarityPlotter():
                             self._x.append(self._curr_date)
                             self._y.append(self._curr_pol)
                             self._err.append(self._curr_err)
-            '''
-            plt.plot(self._x, self._y)
-            #plt.errorbar(self._x, self._y, yerr=self._err)
-            plt.axhline(0, color='grey', lw=1, linestyle="dashed")
-            plt.set_xlim(xmin=self._start, xmax=self._end)
-            plt.xlabel('x')
-            plt.xticks(rotation=90)
-            plt.ylabel('y')
-            '''
-            #plt.errorbar(self._x, self._y, self._err, marker='s', mfc='red', mec='red', ms=10, mew=4)
+
             plt.xlabel('Timeline')
             plt.xticks(rotation=45)
             plt.ylabel('Polarity ("sentiment")')
+            plt.scatter(self._x, self._y)
             plt.errorbar(self._x, self._y, self._err, 
-                capsize=4, elinewidth=0.5, ecolor="red", 
-                marker='.', mfc='red', ms=5)
+                linestyle="None", 
+                elinewidth=0.5, 
+                ecolor="red",
+                capsize=3,
+                marker='.',
+                mfc='blue'
+                )
             plt.axhline(0, color='grey', lw=0.5, linestyle="dashed")
             plt.savefig(gfile, dpi=200)
-            #plt.save_data(gfile)
         
         except Exception:
             return
