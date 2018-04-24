@@ -3,20 +3,24 @@ Twitter Extraction and Analysis Tools based on Tweepy
 
 Made for UniMe internship and thesis (code: T.E.A.)
 
-**Important** : before running any tool, get your Twitter API keys and write them in the authorization file (for example: `auth_creds.ini`).
+**Important**: before running any tool, get your Twitter API keys and write them in the authorization file (for example: `auth_creds.ini`).
 
 _Works with Linux (any distro), Windows (7/8.1/10), macOS (from OS X Yosemite to higher)_
 
 **System Requirements**
 - Python 3 (works **only** on Python 3, no backports for now)
-- Tweepy module
-- Texblob module
-- NLTK corpora (use: `python -m textblob.download_corpora`)
-- Geocoder module
-- Matplotlib module
-- Pandas module
-- Fuzzywuzzy module (used for text comparison)
-- Numpy module
+- Tweepy module: `pip3 install tweepy`
+- Texblob module: `pip3 install textblob`
+- NLTK corpora: use: `python3 -m textblob.download_corpora`
+- Geocoder module: `pip3 install geocoder`
+- Matplotlib module: `pip3 install matplotlib`
+- Python3 Tkinter: `sudo apt install python3-tk`
+- Pandas module: `pip3 install pandas`
+- Python3 Levenshtein: `pip3 install python-Levenshtein`
+- Fuzzywuzzy module: `pip3 install fuzzywuzzy`
+- Numpy module: `pip3 install numpy`
+
+**Note**: if packages installions go wront (`Permission Denied` error), please consider installing them with the `--user` parameter for `pip3` commands.
 
 ## Quickstart
 
