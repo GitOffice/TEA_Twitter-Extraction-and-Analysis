@@ -154,7 +154,7 @@ if __name__ == "__main__":
         if sgraph in ["y", "yes"]:
             pol_graph.show_data()
 
-        pol_graph.save_data(pol_file)
+        #pol_graph.save_data(pol_file)
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")
