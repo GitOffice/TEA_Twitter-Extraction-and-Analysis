@@ -20,7 +20,7 @@ _Works with Linux (any distro), Windows (7/8.1/10), macOS (from OS X Yosemite to
 - Fuzzywuzzy module: `pip3 install fuzzywuzzy`
 - Numpy module: `pip3 install numpy`
 
-**Note**: if packages installions go wrong (`Permission Denied` error), please consider installing them with the `--user` parameter for `pip3` commands.
+**Note**: if packages installations go wrong (`Permission Denied` error), please consider installing them with the `--user` parameter of `pip3` commands.
 
 ## Quickstart
 
