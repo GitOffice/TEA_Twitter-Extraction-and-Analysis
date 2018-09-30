@@ -4,10 +4,15 @@ import sys
 import argparse
 import os
 
-class TimelineFilter():
+
+class TimelineFilter:
 
     def __init__(self):
         self._status = ""
+        self._keywords = ""
+        self._filtered_file = ""
+        self._old_file = ""
+        self._new_file = ""
 
     def filter_lines(self, filename, keywords):
         self._keywords = keywords.split(",")
@@ -18,11 +23,12 @@ class TimelineFilter():
                 for self._line in self._old_file:
                     if any(self._kword in self._line for self._kword in self._keywords):
                         self._new_file.write(self._line)
-            if os.path.exists(self._filtered_file): 
-                print("[*] Filtered file '", self._filtered_file, "' created.")        
+            if os.path.exists(self._filtered_file):
+                print("[*] Filtered file '", self._filtered_file, "' created.")
         except Exception as err:
             print("[ERROR]: ", err)
             sys.exit()
+
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -42,10 +48,9 @@ def get_args():
         required=True)
 
     args = parser.parse_args()
-    ifile = args.ifile
-    keywords = args.keywords
 
-    return ifile, keywords
+    return args.ifile, args.keywords
+
 
 if __name__ == "__main__":
 
@@ -54,7 +59,7 @@ if __name__ == "__main__":
         ifile, keywords = get_args()
 
         elem = TimelineFilter()
-        elem.filter_lines(ifile, keywords) 
+        elem.filter_lines(ifile, keywords)
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")

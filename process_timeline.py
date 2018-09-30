@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 
 import pandas as pd
-import numpy as np
 import os
 import sys
 import csv
 import argparse
 import collections
 
-class TimelineProcessor():
+
+class TimelineProcessor:
 
     def __init__(self):
-        dataset = dict()
-        data_elem = list()
+        self._dataset = dict()
+        self._data_elem = list()
+        self._elem = ""
+        self._ordered = ""
+        self._g = ""
 
-    def dict_writer(self, f_name, data_dict):
+    @staticmethod
+    def dict_writer(f_name, data_dict):
         try:
             # Windows
             if os.name == "nt":
@@ -33,29 +37,30 @@ class TimelineProcessor():
             sys.exit()
 
     def build_dataset(self, f_name):
-        elem = pd.read_csv(
-            f_name, 
-            usecols=[0,3],
+        self._elem = pd.read_csv(
+            f_name,
+            usecols=[0, 3],
             names=["created_at", "polarity"]
-            )
+        )
 
-        g = elem.groupby('created_at')
+        self._g = self._elem.groupby('created_at')
 
-        for _, g in elem.groupby('created_at'):
-            data_elem = []
-            group_date = str(g['created_at'].values[0])
-            mean = g.mean()
+        for _, self._g in self._elem.groupby('created_at'):
+            self._data_elem = []
+            group_date = str(self._g['created_at'].values[0])
+            mean = self._g.mean()
             mean = str(mean.values[0].round(4))
-            pol_max = (g['polarity'].max().round(4))
-            pol_min = (g['polarity'].min().round(4))
-            max_err = str(((pol_max - pol_min)/2).round(4))
-            data_elem.append(mean)
-            data_elem.append(max_err)
-            dataset[group_date] = data_elem
+            pol_max = (self._g['polarity'].max().round(4))
+            pol_min = (self._g['polarity'].min().round(4))
+            max_err = str(((pol_max - pol_min) / 2).round(4))
+            self._data_elem.append(mean)
+            self._data_elem.append(max_err)
+            self._dataset[group_date] = self._data_elem
 
-            ordered = collections.OrderedDict(sorted(dataset.items(), key=lambda t: t[0]))
+            self._ordered = collections.OrderedDict(sorted(self._dataset.items(), key=lambda t: t[0]))
 
-        return ordered
+        return self._ordered
+
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -66,28 +71,27 @@ def get_args():
         type=str,
         help='CSV input filename',
         required=True
-        )
+    )
     parser.add_argument(
         '-o',
         '--ofile',
         type=str,
         help='Processed CSV output filename',
         required=True
-        )
+    )
 
     args = parser.parse_args()
-    ifile = args.ifile
-    ofile = args.ofile
-    return ifile, ofile
+
+    return args.ifile, args.ofile
+
 
 if __name__ == "__main__":
 
     try:
-        dataset = dict()
         ifile, ofile = get_args()
         elem = TimelineProcessor()
         dataset = elem.build_dataset(ifile)
-        elem.dict_writer(ofile, dataset) 
+        elem.dict_writer(ofile, dataset)
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")

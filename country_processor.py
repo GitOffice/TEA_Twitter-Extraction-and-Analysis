@@ -1,8 +1,6 @@
-import multiprocessing
 import csv
 import os
 import re
-from collections import Counter
 import sys
 import pandas as pd
 try:
@@ -17,12 +15,16 @@ except ImportError:
     sys.exit()
 
 
-class CountryProcessor():
+class CountryProcessor:
 
     def __init__(self):
         self._status = ""
+        self._myFile = ""
+        self._myList = ""
+        self._reader = ""
 
-    def clean_name(self, tweet):
+    @staticmethod
+    def clean_name(tweet):
         return ' '.join(
             re.sub(
                 "(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)",
@@ -59,7 +61,7 @@ else:
 
 def geocoder_worker(location):
     try:
-        #if cache exists
+        # if cache exists
         if status is True:
             res = df[df["loc"].str.match(location)]['country']
 
@@ -77,8 +79,8 @@ def geocoder_worker(location):
                 temp = location + "," + country_name
                 db.backup_db(temp, "geo_db.db")
                 return country_name
-        
-        #if cache doesn't exists
+
+        # if cache doesn't exists
         else:
             country_elem = geocoder.komoot(location)
             country_name = country_elem.country

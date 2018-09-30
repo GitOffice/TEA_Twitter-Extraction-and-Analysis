@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-import os
 import sys
 import argparse
-import csv
 
 try:
     import auth_check as ack
@@ -58,12 +56,8 @@ def get_args():
         required=True)
 
     args = parser.parse_args()
-    uauth = args.auth
-    outfile = args.ofile
-    num = int(args.tnum)
-    hashtag = args.hashtag
 
-    return uauth, outfile, num, hashtag
+    return args.auth, args.ofile, int(args.tnum), args.hashtag
 
 
 if __name__ == "__main__":

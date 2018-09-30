@@ -5,6 +5,7 @@ import sys
 from datetime import datetime
 import os
 import argparse
+
 try:
     import matplotlib.pyplot as plt
 except ImportError:
@@ -16,22 +17,36 @@ except ImportError:
     print("[ERROR] Unable to import Pandas module! Exit...")
     sys.exit
 
-class PolarityPlotter():
+
+class PolarityPlotter:
 
     def __init__(self):
         self._status = ""
+        self._x = ""
+        self._y = ""
+        self._err = ""
+        self._title = ""
+        self._start = ""
+        self._end = ""
+        self._csvfile = ""
+        self._plots = ""
+        self._curr_date = ""
+        self._curr_pol = ""
+        self._curr_err = ""
 
-    def save_data(self, gfile):
+    @staticmethod
+    def save_data(gfile):
         plt.savefig(gfile, dpi=200)
 
-    def show_data(self):
+    @staticmethod
+    def show_data():
         plt.show()
 
     def plot_data(self, fname, account, keywords, gfile, start, end):
         self._x = list()
         self._y = list()
         self._err = list()
-        
+
         self._title = str(account) + " polarity graph regarding: "
         self._title += str(keywords)
         self._title += "\nbetween " + start + " and " + end
@@ -43,36 +58,37 @@ class PolarityPlotter():
         try:
             with open(fname, 'r') as self._csvfile:
                 self._plots = csv.reader(self._csvfile, delimiter=',')
-                #next(self._plots, None)
-                
+
                 for self._row in self._plots:
-                    self._curr_date = datetime.strptime((self._row[0])[0:10], 
-                        "%Y-%m-%d").date() 
+                    self._curr_date = datetime.strptime((self._row[0])[0:10],
+                                                        "%Y-%m-%d").date()
                     self._curr_pol = float(self._row[1])
                     self._curr_err = float(self._row[2])
 
-                    if self._curr_date >= self._start and self._curr_date <= self._end:
-                            self._x.append(self._curr_date)
-                            self._y.append(self._curr_pol)
-                            self._err.append(self._curr_err)
+                    if self._start <= self._curr_date <= self._end:
+                        self._x.append(self._curr_date)
+                        self._y.append(self._curr_pol)
+                        self._err.append(self._curr_err)
 
             plt.xlabel('Timeline')
             plt.xticks(rotation=45)
             plt.ylabel('Polarity ("sentiment")')
             plt.scatter(self._x, self._y)
-            plt.errorbar(self._x, self._y, self._err, 
-                linestyle="None", 
-                elinewidth=0.5, 
-                ecolor="red",
-                capsize=3,
-                marker='.',
-                mfc='blue'
-                )
+            plt.errorbar(self._x, self._y, self._err,
+                         linestyle="None",
+                         elinewidth=0.5,
+                         ecolor="red",
+                         capsize=3,
+                         marker='.',
+                         mfc='blue'
+                         )
             plt.axhline(0, color='grey', lw=0.5, linestyle="dashed")
             plt.savefig(gfile, dpi=200)
-        
-        except Exception:
+
+        except Exception as e:
+            print("\n[Details]: ", e)
             return
+
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -120,14 +136,9 @@ def get_args():
         default="2020-01-01")
 
     args = parser.parse_args()
-    ifile = args.ifile
-    cuser = args.user
-    ckeywords = args.keywords
-    sgraph = (args.graph).lower()
-    start = args.start
-    end = args.end
 
-    return ifile, cuser, ckeywords, sgraph, start, end
+    return args.ifile, args.user, args.keywords, args.graph.lower(), args.start, args.end
+
 
 if __name__ == "__main__":
 
@@ -153,8 +164,6 @@ if __name__ == "__main__":
 
         if sgraph in ["y", "yes"]:
             pol_graph.show_data()
-
-        #pol_graph.save_data(pol_file)
 
     except KeyboardInterrupt:
         print("[NOTICE] Script interrupted via keyboard (Ctrl+C)")

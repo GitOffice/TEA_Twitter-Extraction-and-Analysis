@@ -7,12 +7,14 @@ except ImportError:
     sys.exit()
 
 
-class TweetSentiment():
+class TweetSentiment:
 
     def __init__(self):
         self._status = ""
+        self._analysis = ""
 
-    def clean_tweet(self, tweet):
+    @staticmethod
+    def clean_tweet(tweet):
         return ' '.join(
             re.sub(
                 "(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)",
@@ -21,10 +23,14 @@ class TweetSentiment():
 
     def get_tweet_sentiment(self, tweet):
         self._analysis = TextBlob(self.clean_tweet(tweet))
-        # set sentiment
+
         if self._analysis.sentiment.polarity > 0:
             return 'positive'
         elif self._analysis.sentiment.polarity == 0:
             return 'neutral'
         else:
             return 'negative'
+
+    def get_tweet_sentiment_data(self, tweet):
+        self._analysis = TextBlob(self.clean_tweet(tweet))
+        return self._analysis.sentiment

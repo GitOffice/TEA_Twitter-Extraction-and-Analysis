@@ -1,10 +1,6 @@
 import os
-import datetime
 import sys
 import csv
-import re
-import time
-import datetime
 try:
     import text_sentiment as sc
 except ImportError:
@@ -22,14 +18,20 @@ except ImportError:
     sys.exit()
 
 
-class Scraper():
+class Scraper:
 
     def __init__(self):
         self._status = ""
-
-    def get_tweets(self, api, data, num, targets):
+        self._csv_tweet = ""
+        self._csv_tweet_writer = ""
+        self._csv_data = ""
+        self._csv_data_writer = ""
+        self._parsed_data = ""
+        self._parsed_tweet = ""
         self._tweets = list()
         self._analyzer = sc.TweetSentiment()
+
+    def get_tweets(self, api, data, num, targets):
 
         try:
             if os.name == "nt":
@@ -46,8 +48,9 @@ class Scraper():
             self._csv_data_writer = csv.writer(self._csv_data)
             self._csv_data_writer.writerow(["tweet", "sentiment"])
 
-        except BaseException:
+        except Exception as e:
             print("[ERROR] Unable to prepare CSV files!")
+            print("\n[Details]: ", e)
             sys.exit()
 
         print("[*] Fetching tweets and processing 'tweets sentiment' data")
@@ -70,10 +73,11 @@ class Scraper():
                         self._tweet.user.screen_name.encode('utf-8'),
                         self._tweet.full_text.encode('ascii', errors='ignore'),
                     ])
-                except BaseException:
+                except Exception as e:
                     print(
                         "[ERROR] Unable to write tweets on file: ",
                         data)
+                    print("\n[Details]: ", e)
                     sys.exit()
 
                 try:
@@ -97,10 +101,11 @@ class Scraper():
                         self._tweet.full_text.encode('ascii', 'ignore'),
                         self._parsed_tweet['sentiment']
                     ])
-                except BaseException:
+                except Exception as e:
                     print(
                         "[ERROR] Unable to write analysis on file: ",
                         self._parsed_data)
+                    print("\n[Details]: ", e)
                     sys.exit()
             return self._tweets
 
@@ -110,6 +115,7 @@ class Scraper():
             else:
                 print("[ERROR: TWEEPY API] " + str(e.text))
             sys.exit()
-        except BaseException:
+        except Exception as e:
             print("[ERROR] Unable to get/save tweets!")
+            print("\n[Details]: ", e)
             sys.exit()

@@ -8,7 +8,7 @@ except ImportError:
     sys.exit()
 try:
     import timeline_scraper
-except BaseException:
+except ImportError:
     print("[ERROR] Unable to import timeline_scraper module: can't run!")
     sys.exit()
 try:
@@ -20,7 +20,7 @@ except ImportError:
 
 def get_args():
     parser = argparse.ArgumentParser(
-        description='Script get account timeline and filter its tweets using def. keywords')
+        description='Script get account timeline')
     parser.add_argument(
         '-a',
         '--auth',
@@ -42,11 +42,8 @@ def get_args():
         default="user_timeline.csv")
 
     args = parser.parse_args()
-    uauth = args.auth
-    cuser = args.user
-    outfile = args.ofile
 
-    return uauth, cuser, outfile
+    return args.auth, args.user, args.ofile
 
 
 if __name__ == "__main__":

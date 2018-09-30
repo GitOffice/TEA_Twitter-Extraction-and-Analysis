@@ -1,22 +1,28 @@
 import os
-import datetime
 import sys
 import csv
-import re
-import time
 import datetime
 from datetime import datetime
-from collections import OrderedDict
+
 try:
     import tweepy
 except ImportError:
     print("[ERROR] Unable to import Tweepy module: can't run!")
     sys.exit()
 
-class TimelineScraper():
+
+class TimelineScraper:
 
     def __init__(self):
         self._status = ""
+        self._csv_tweet = ""
+        self._csv_tweet_writer = ""
+        self._curr_date = ""
+        self._curr_elem = ""
+        self._curr_polarity = ""
+        self._curr_subjectivity = ""
+        self._status = ""
+        self._tweet_dec_text = ""
 
     def get_timeline(self, api, analyzer, target, data):
         try:
@@ -30,8 +36,9 @@ class TimelineScraper():
             self._csv_tweet_writer.writerow(
                 ["created_at", "location", "full_text", "polarity", "subjectivity"])
 
-        except BaseException:
+        except Exception as e:
             print("[ERROR] Unable to prepare CSV files!")
+            print("\n[Details]: ", e)
             sys.exit()
 
         try:
@@ -73,7 +80,7 @@ class TimelineScraper():
             if e.api_code == 429:
                 print("[ERROR: TWEEPY API] Too many requests. Wait some minutes.")
             else:
-                print("[ERROR: TWEEPY API] " + str(e.text))
+                print("[ERROR: TWEEPY API]")
             sys.exit()
         except Exception as e:
             print("[ERROR]: ", e)

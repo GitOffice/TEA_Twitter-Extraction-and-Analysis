@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-import csv
 import sys
 import argparse
-import os.path
 import os
 try:
     import matplotlib.pyplot as plt
@@ -21,8 +19,12 @@ class Plotter(object):
 
     def __init__(self):
         self._status = ""
+        self._data = ""
+        self._title = ""
+        self._color = ""
 
-    def show_data(self):
+    @staticmethod
+    def show_data():
         plt.show()
 
     def plot_data(self, data_file, sentiment, base_hash, limit, num, gfile):
@@ -54,7 +56,8 @@ class Plotter(object):
             plt.title(self._title)
             plt.savefig(gfile)
 
-        except BaseException:
+        except Exception as e:
+            print("\n[Details]: ", e)
             return
 
 
@@ -96,13 +99,8 @@ def get_args():
         default="y")
 
     args = parser.parse_args()
-    ifile = args.ifile
-    num = int(args.tnum)
-    hashtag = args.hashtag
-    limit = int(args.limitf)
-    sgraph = (args.graph).lower()
 
-    return ifile, num, hashtag, limit, sgraph
+    return args.ifile, int(args.tnum), args.hashtag, int(args.limitf), args.graph.lower()
 
 
 if __name__ == "__main__":

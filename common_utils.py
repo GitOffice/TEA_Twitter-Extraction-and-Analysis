@@ -3,10 +3,13 @@ import os
 import sys
 
 
-class FastWriter():
+class FastWriter:
 
     def __init__(self):
         self._status = ""
+        self._csv_file = ""
+        self._writer = ""
+        self._db_file = ""
 
     def fast_writer(self, f_name, text_dict):
         try:
@@ -24,8 +27,9 @@ class FastWriter():
                     for self._key, self._value in text_dict.items():
                         self._writer.writerow([self._key, self._value])
 
-        except BaseException:
+        except Exception as e:
             print("[ERROR] Unable to write file on disk. Exit...")
+            print("\n[Details]: ", e)
             sys.exit()
 
     def backup_db(self, elem, fout):
@@ -43,6 +47,7 @@ class FastWriter():
                     )
                     self._writer.writerow(elem.split(","))
 
-        except BaseException:
+        except Exception as e:
             print("[ERROR] Unable to write file on disk. Exit...")
+            print("\n[Details]: ", e)
             sys.exit()

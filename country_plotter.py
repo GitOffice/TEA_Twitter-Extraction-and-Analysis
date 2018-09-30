@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
 
 import csv
-import re
-from itertools import chain
 import sys
-import uuid
 from collections import Counter
 import argparse
-import time
-import os.path
 import os
 import warnings
 import multiprocessing
@@ -41,10 +36,15 @@ except ImportError:
 warnings.filterwarnings("ignore", category=matplotlib.cbook.mplDeprecation)
 
 
-class CountryPlotter():
+class CountryPlotter:
 
     def __init__(self):
         self._status = ""
+        self._title = ""
+        self.outfile = ""
+        self._rfile = ""
+        self._countries = ""
+        self._freq = ""
 
     def plot_graph(self, fname, limit, num, bhash, gfile, sgraph):
         self._title = "Countries Analysis for " + str(num) + \
@@ -119,14 +119,9 @@ def get_args():
         default="y")
 
     args = parser.parse_args()
-    ifile = args.ifile
-    num = int(args.tnum)
-    hashtag = args.hashtag
-    limit = int(args.limitf)
-    sgraph = (args.graph).lower()
-    fout = ((str(ifile))[:-4]) + "_countries.csv"
+    fout = ((str(args.ifile))[:-4]) + "_countries.csv"
 
-    return ifile, num, hashtag, limit, sgraph, fout
+    return args.ifile, int(args.tnum), args.hashtag, int(args.limitf), args.graph.lower(), fout
 
 
 if __name__ == "__main__":
